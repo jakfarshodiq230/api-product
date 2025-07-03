@@ -35,40 +35,33 @@ API ini adalah backend untuk aplikasi Point of Sale (POS) berbasis Laravel. API 
 
 ## Manajemen User (Admin)
 
-- Lihat semua user: `GET /api/users`
-- Lihat detail user: `GET /api/users/{id}`
-- Tambah user: `POST /api/users`
+- Lihat semua user: `GET /api/users` _(butuh token)_
+- Lihat detail user: `GET /api/users/{id}` _(butuh token)_
+- Tambah user: `POST /api/users`_(butuh token)_
 
 ## Manajemen Produk
 
-- Lihat semua produk: `GET /api/products`
-- Lihat detail produk: `GET /api/products/{id}`
-- Tambah produk: `POST /api/products`
-- Update produk: `PUT /api/products/{id}`
-- Hapus produk: `DELETE /api/products/{id}`
+- Lihat semua produk: `GET /api/products`_(butuh token)_
+- Lihat detail produk: `GET /api/products/{id}`_(butuh token)_
+- Tambah produk: `POST /api/products`_(butuh token)_
+- Update produk: `PUT /api/products/{id}`_(butuh token)_
+- Hapus produk: `DELETE /api/products/{id}`_(butuh token)_
 
 ## Manajemen Kategori Produk
 
-- Lihat semua kategori: `GET /api/categories`
-- Lihat detail kategori: `GET /api/categories/{id}`
-- Tambah kategori: `POST /api/categories`
-- Update kategori: `PUT /api/categories/{id}`
+- Lihat semua kategori: `GET /api/categories`_(butuh token)_
+- Lihat detail kategori: `GET /api/categories/{id}`_(butuh token)_
+- Tambah kategori: `POST /api/categories`_(butuh token)_
+- Update kategori: `PUT /api/categories/{id}`_(butuh token)_
 
 ## Keranjang
 
-- Lihat isi keranjang: `GET /api/cart`
-- Tambah ke keranjang: `POST /api/cart/add`
+- Lihat isi keranjang: `GET /api/cart`_(butuh token)_
+- Tambah ke keranjang: `POST /api/cart/add`_(butuh token)_
 
-## Pemesanan
+## Documentasi API
+Untuk documentasi API, Anda dapat localhost/api/documentation
 
-- Lihat semua pesanan: `GET /api/orders`
-- Lihat detail pesanan: `GET /api/orders/{id}`
-- Buat pesanan: `POST /api/orders`
-
-## Data Penjualan (Admin)
-
-- Lihat data penjualan: `GET /api/sales`
-- Lihat produk terlaris: `GET /api/top-products`
 
 > Semua endpoint (kecuali register & login) membutuhkan autentikasi token JWT.
 

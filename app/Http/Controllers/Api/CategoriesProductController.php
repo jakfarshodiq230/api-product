@@ -8,6 +8,31 @@ use App\Http\Controllers\Controller;
 
 class CategoriesProductController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/api/categories-products",
+     *     summary="Get list of category products",
+     *     tags={"CategoriesProduct"},
+     *     @OA\Parameter(
+     *         name="skip",
+     *         in="query",
+     *         description="Number of records to skip",
+     *         required=false,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         description="Number of records to return",
+     *         required=false,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     )
+     * )
+     */
     public function index()
     {
         $skip = 0;
@@ -25,6 +50,27 @@ class CategoriesProductController extends Controller
         ], 200);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/categories-products/{id}",
+     *     summary="Get a category product by ID",
+     *     tags={"CategoriesProduct"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Product not found"
+     *     )
+     * )
+     */
     public function show($id)
     {
         $product = CategoriesProduct::find($id);
@@ -42,6 +88,38 @@ class CategoriesProductController extends Controller
         ]);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/categories-products",
+     *     summary="Create a new category product",
+     *     tags={"CategoriesProduct"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"slug","name","url"},
+     *             @OA\Property(property="slug", type="string"),
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="url", type="string"),
+     *             @OA\Property(property="description", type="string"),
+     *             @OA\Property(property="price", type="number"),
+     *             @OA\Property(property="discount_percentage", type="number"),
+     *             @OA\Property(property="rating", type="number"),
+     *             @OA\Property(property="stock", type="integer"),
+     *             @OA\Property(property="brand", type="string"),
+     *             @OA\Property(property="thumbnail", type="string"),
+     *             @OA\Property(property="images", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Product created"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -66,6 +144,47 @@ class CategoriesProductController extends Controller
         ], 201);
     }
 
+    /**
+     * @OA\Put(
+     *     path="/api/categories-products/{id}",
+     *     summary="Update a category product",
+     *     tags={"CategoriesProduct"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="slug", type="string"),
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="url", type="string"),
+     *             @OA\Property(property="description", type="string"),
+     *             @OA\Property(property="price", type="number"),
+     *             @OA\Property(property="discount_percentage", type="number"),
+     *             @OA\Property(property="rating", type="number"),
+     *             @OA\Property(property="stock", type="integer"),
+     *             @OA\Property(property="brand", type="string"),
+     *             @OA\Property(property="thumbnail", type="string"),
+     *             @OA\Property(property="images", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Product updated"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Product not found"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     )
+     * )
+     */
     public function update(Request $request, $id)
     {
         $product = CategoriesProduct::find($id);
@@ -99,6 +218,27 @@ class CategoriesProductController extends Controller
         ]);
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/api/categories-products/{id}",
+     *     summary="Delete a category product",
+     *     tags={"CategoriesProduct"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Product deleted"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Product not found"
+     *     )
+     * )
+     */
     public function destroy($id)
     {
         $product = CategoriesProduct::find($id);

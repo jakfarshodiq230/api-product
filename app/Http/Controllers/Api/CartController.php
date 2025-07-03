@@ -12,6 +12,57 @@ use Illuminate\Validation\ValidationException;
 
 class CartController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/api/cart",
+     *     summary="Get user's cart",
+     *     tags={"Cart"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="skip",
+     *         in="query",
+     *         description="Number of products to skip",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=0)
+     *     ),
+     *     @OA\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         description="Number of products to return",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=30)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Cart data",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="carts", type="object",
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="products", type="array",
+     *                     @OA\Items(
+     *                         @OA\Property(property="id", type="integer"),
+     *                         @OA\Property(property="title", type="string"),
+     *                         @OA\Property(property="price", type="number", format="float"),
+     *                         @OA\Property(property="quantity", type="integer"),
+     *                         @OA\Property(property="total", type="number", format="float"),
+     *                         @OA\Property(property="discountPercentage", type="number", format="float"),
+     *                         @OA\Property(property="discountedTotal", type="number", format="float"),
+     *                         @OA\Property(property="thumbnail", type="string"),
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="total", type="number", format="float"),
+     *                 @OA\Property(property="discountedTotal", type="number", format="float"),
+     *                 @OA\Property(property="userId", type="integer"),
+     *                 @OA\Property(property="totalProducts", type="integer"),
+     *                 @OA\Property(property="totalQuantity", type="integer"),
+     *             ),
+     *             @OA\Property(property="total", type="integer"),
+     *             @OA\Property(property="skip", type="integer"),
+     *             @OA\Property(property="limit", type="integer"),
+     *         )
+     *     )
+     * )
+     */
     // Get user's cart
     public function show(Request $request)
     {
@@ -67,6 +118,47 @@ class CartController extends Controller
         ]);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/cart/add",
+     *     summary="Add items to cart",
+     *     tags={"Cart"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"userId","products"},
+     *             @OA\Property(property="userId", type="integer", example=1),
+     *             @OA\Property(
+     *                 property="products",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="quantity", type="integer", example=2)
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Products added to cart successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="cart", type="object"),
+     *             @OA\Property(property="items", type="array", @OA\Items(type="object")),
+     *             @OA\Property(property="total", type="number", format="float")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     )
+     * )
+     */
     // Add items to cart
     public function addToCart(Request $request)
     {
