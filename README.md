@@ -60,7 +60,7 @@ API ini adalah backend untuk aplikasi Point of Sale (POS) berbasis Laravel. API 
 - Tambah ke keranjang: `POST /api/cart/add`_(butuh token)_
 
 ## Documentasi API
-> Untuk documentasi API, Anda dapat `_localhost/api/documentation_`
+> Untuk documentasi API, Anda dapat _`localhost/api/documentation`_
 
 
 > Semua endpoint (kecuali register & login) membutuhkan autentikasi token JWT.
