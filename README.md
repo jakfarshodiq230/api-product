@@ -1,6 +1,6 @@
 # POS API
 
-API ini adalah backend untuk aplikasi Point of Sale (POS) berbasis Laravel. API menyediakan fitur autentikasi, manajemen produk, pemesanan, dan data penjualan. Semua endpoint utama dilindungi oleh autentikasi JWT.
+API ini adalah backend untuk aplikasi Point of Sale (POS) berbasis Laravel. API menyediakan fitur autentikasi, manajemen produk, kategori produk, keranjang, pemesanan, dan data penjualan. Semua endpoint utama dilindungi oleh autentikasi JWT.
 
 ## Cara Menggunakan
 
@@ -29,7 +29,15 @@ API ini adalah backend untuk aplikasi Point of Sale (POS) berbasis Laravel. API 
 
 - Register: `POST /api/auth/register`
 - Login: `POST /api/auth/login`
-- Logout, Refresh Token, dan User Profile hanya dapat diakses setelah login.
+- Logout: `POST /api/auth/logout` _(butuh token)_
+- Refresh Token: `POST /api/auth/refresh` _(butuh token)_
+- User Profile: `GET /api/auth/user-profile` _(butuh token)_
+
+## Manajemen User (Admin)
+
+- Lihat semua user: `GET /api/users`
+- Lihat detail user: `GET /api/users/{id}`
+- Tambah user: `POST /api/users`
 
 ## Manajemen Produk
 
@@ -38,6 +46,18 @@ API ini adalah backend untuk aplikasi Point of Sale (POS) berbasis Laravel. API 
 - Tambah produk: `POST /api/products`
 - Update produk: `PUT /api/products/{id}`
 - Hapus produk: `DELETE /api/products/{id}`
+
+## Manajemen Kategori Produk
+
+- Lihat semua kategori: `GET /api/categories`
+- Lihat detail kategori: `GET /api/categories/{id}`
+- Tambah kategori: `POST /api/categories`
+- Update kategori: `PUT /api/categories/{id}`
+
+## Keranjang
+
+- Lihat isi keranjang: `GET /api/cart`
+- Tambah ke keranjang: `POST /api/cart/add`
 
 ## Pemesanan
 
