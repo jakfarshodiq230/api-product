@@ -4,8 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductController;
-use App\Http\Controllers\Api\OrderController;
-use App\Http\Controllers\Api\SalesController;
+use App\Http\Controllers\Api\CategoriesProductController;
+use App\Http\Controllers\Api\CartController;
 
 Route::group(['prefix' => 'auth'], function() {
     Route::post('login', [AuthController::class, 'login']);
@@ -19,6 +19,12 @@ Route::group(['prefix' => 'auth'], function() {
 });
 
 Route::group(['middleware' => 'auth:api'], function() {
+
+    // User Management (Admin only)
+    Route::get('users', [AuthController::class, 'index']);
+    Route::get('users/{id}', [AuthController::class, 'show']);
+    Route::post('users', [AuthController::class, 'register']);
+
     // Products
     Route::get('products', [ProductController::class, 'index']);
     Route::get('products/{id}', [ProductController::class, 'show']);
@@ -26,12 +32,14 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::put('products/{id}', [ProductController::class, 'update']);
     Route::delete('products/{id}', [ProductController::class, 'destroy']);
 
-    // Orders
-    Route::get('orders', [OrderController::class, 'index']);
-    Route::get('orders/{id}', [OrderController::class, 'show']);
-    Route::post('orders', [OrderController::class, 'store']);
+    // Categories Products
+    Route::get('categories', [CategoriesProductController::class, 'index']);
+    Route::get('categories/{id}', [CategoriesProductController::class, 'show']);
+    Route::post('categories', [CategoriesProductController::class, 'store']);
+    Route::put('categories/{id}', [CategoriesProductController::class, 'update']);
 
-    // Sales Data (Admin only)
-    Route::get('sales', [SalesController::class, 'salesData']);
-    Route::get('top-products', [SalesController::class, 'productSales']);
+    // cart
+    Route::get('cart', [CartController::class, 'show']);
+    Route::post('cart/add', [CartController::class, 'addToCart']);
+
 });

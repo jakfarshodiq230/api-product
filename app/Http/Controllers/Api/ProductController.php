@@ -3,110 +3,161 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index() {
-        $products = Product::all();
+    /**
+     * Display a listing of the products.
+     */
+    public function index()
+    {
+        $skip = 0;
+        $limit = 30;
+        $total = Product::count();
+        $products = Product::skip($skip)
+            ->take($limit)
+            ->get();
         return response()->json([
-            'message' => 'Products fetched successfully',
-            'products' => $products
-        ]);
+            'message' => 'Daftar produk berhasil diambil',
+            'products' => $products,
+            'total' => $total,
+            'skip' => $skip,
+            'limit' => $limit,
+        ], 200);
     }
 
-    public function show($id) {
-        $product = Product::find($id);
-        if (!$product) {
-            return response()->json(['message' => 'Product not found'], 404);
-        }
-        return response()->json($product);
-    }
-
-    public function store(Request $request) {
+    /**
+     * Store a newly created product in storage.
+     */
+    public function store(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
+            'category' => 'required|string|max:255',
+            'brand' => 'required|string|max:255',
             'stock' => 'required|integer|min:0',
-            'category' => 'required|in:arabica,robusta,blend,specialty',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
         }
 
-        $data = $request->except('image');
-
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('product_images', 'public');
-            $data['image_path'] = $imagePath;
-        }
-
-        $product = Product::create($data);
+        $product = Product::create($request->all());
 
         return response()->json([
-            'message' => 'Product created successfully',
-            'product' => $product
+            'success' => true,
+            'data' => $product
         ], 201);
     }
 
-    public function update(Request $request, $id) {
+    /**
+     * Display the specified product.
+     */
+    public function show($id)
+    {
         $product = Product::find($id);
+
         if (!$product) {
-            return response()->json(['message' => 'Product not found'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found'
+            ], 404);
         }
-
-        $validator = Validator::make($request->all(), [
-            'name' => 'sometimes|string|max:255',
-            'description' => 'sometimes|string',
-            'price' => 'sometimes|numeric|min:0',
-            'stock' => 'sometimes|integer|min:0',
-            'category' => 'sometimes|in:arabica,robusta,blend,specialty',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        $data = $request->except('image');
-
-        if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($product->image_path) {
-                Storage::disk('public')->delete($product->image_path);
-            }
-
-            $imagePath = $request->file('image')->store('product_images', 'public');
-            $data['image_path'] = $imagePath;
-        }
-
-        $product->update($data);
 
         return response()->json([
-            'message' => 'Product updated successfully',
-            'product' => $product
+            'success' => true,
+            'data' => $product
         ]);
     }
 
-    public function destroy($id) {
+    /**
+     * Update the specified product in storage.
+     */
+    public function update(Request $request, $id)
+    {
         $product = Product::find($id);
+
         if (!$product) {
-            return response()->json(['message' => 'Product not found'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found'
+            ], 404);
         }
 
-        // Delete image if exists
-        if ($product->image_path) {
-            Storage::disk('public')->delete($product->image_path);
+        $validator = Validator::make($request->all(), [
+            'title' => 'sometimes|string|max:255',
+            'description' => 'sometimes|string',
+            'price' => 'sometimes|numeric|min:0',
+            'category' => 'sometimes|string|max:255',
+            'brand' => 'sometimes|string|max:255',
+            'stock' => 'sometimes|integer|min:0',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $product->update($request->all());
+
+        return response()->json([
+            'success' => true,
+            'data' => $product
+        ]);
+    }
+
+    /**
+     * Remove the specified product from storage.
+     */
+    public function destroy($id)
+    {
+        $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found'
+            ], 404);
         }
 
         $product->delete();
 
-        return response()->json(['message' => 'Product deleted successfully']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Product deleted successfully'
+        ]);
+    }
+
+    /**
+     * Create Nike JA 1 Mismatch product via API
+     */
+    public function createNikeJaMismatch()
+    {
+        $productData = [
+            'title' => 'Nike JA 1 mismatch',
+            'description' => 'Nike Ja Morant shoes gen 1 mismatch type',
+            'price' => 399.99,
+            'category' => 'mens-shoes',
+            'brand' => 'Nike',
+            'stock' => 5
+        ];
+
+        $product = Product::create($productData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Nike JA 1 Mismatch product created successfully',
+            'data' => $product
+        ], 201);
     }
 }

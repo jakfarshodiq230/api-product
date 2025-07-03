@@ -19,9 +19,28 @@ class User extends Authenticatable implements JWTSubject
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
+        'maiden_name',
+        'age',
+        'gender',
         'email',
+        'phone',
+        'username',
         'password',
+        'birth_date',
+        'image',
+        'blood_group',
+        'height',
+        'weight',
+        'eye_color',
+        'ip',
+        'mac_address',
+        'university',
+        'ein',
+        'ssn',
+        'user_agent',
+        'role'
     ];
 
     /**
@@ -60,5 +79,30 @@ class User extends Authenticatable implements JWTSubject
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function hair()
+    {
+        return $this->hasOne(Hair::class);
+    }
+
+    public function address()
+    {
+        return $this->hasOne(Address::class);
+    }
+
+    public function bank()
+    {
+        return $this->hasOne(Bank::class);
+    }
+
+    public function company()
+    {
+        return $this->hasOne(Company::class);
+    }
+
+    public function crypto()
+    {
+        return $this->hasOne(Crypto::class);
     }
 }
